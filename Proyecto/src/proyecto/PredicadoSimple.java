@@ -46,6 +46,7 @@ public class PredicadoSimple {
 
     public void setOperador(String Operador) {
         this.Operador = Operador;
+        return;
     }
 
     public void setValor(String valor) {

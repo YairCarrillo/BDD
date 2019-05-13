@@ -21,7 +21,7 @@ public class ManejadorMysql {
     Connection connection;
     String driver="com.mysql.jdbc.Driver";
     String user="root";
-    String pw="root";
+    String pw="peter2017";
     String url="jdbc:mysql://127.0.0.1:3306/galardon_galardonados";
     public ManejadorMysql(){   
        this.Connection();

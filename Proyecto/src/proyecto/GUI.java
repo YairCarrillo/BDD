@@ -5,14 +5,17 @@
  */
 package proyecto;
 
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -29,13 +32,16 @@ public class GUI extends javax.swing.JFrame {
     private String RelacionVertical;
     private String Operador;
     ArrayList<PredicadoSimple> predicados;
+    ArrayList <Pre_Minitermino> miniterminos;
     ArrayList<JCheckBox> checkBox;
+    String prediSim;
     /**
      * Creates new form GUI
      */
     public GUI() {
         mysql=new ManejadorMysql();
         predicados=new ArrayList();
+        miniterminos = new ArrayList();         //Se agrego un array para miniterminos!----------------------------
         checkBox=new ArrayList();
         initComponents();
     }
@@ -58,7 +64,7 @@ public class GUI extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
+        Genera_Minit = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jComboBox2 = new javax.swing.JComboBox<>();
         jComboBox3 = new javax.swing.JComboBox<>();
@@ -68,6 +74,11 @@ public class GUI extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
+        Miniterms_jScroll = new javax.swing.JScrollPane();
+        jTableMiniTerms = new javax.swing.JTable();
+        jLabel7 = new javax.swing.JLabel();
+        jComboBox6 = new javax.swing.JComboBox<>();
+        jButton4 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -78,6 +89,8 @@ public class GUI extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         jPanel9 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
+        jComboBox5 = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
 
@@ -156,19 +169,27 @@ public class GUI extends javax.swing.JFrame {
         ));
         jTable1.setEnabled(false);
         jScrollPane2.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(20);
+        }
 
-        jButton2.setText("Aceptar");
+        Genera_Minit.setText("Generar miniterminos");
+        Genera_Minit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Genera_MinitActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap(315, Short.MAX_VALUE)
-                        .addComponent(jButton2)))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(Genera_Minit)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -177,7 +198,7 @@ public class GUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(Genera_Minit)
                 .addContainerGap())
         );
 
@@ -189,11 +210,16 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "=", "<", ">", "¬", "<=", ">=" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "=", "<", ">", "<>", "<=", ">=" }));
         Operador=jComboBox3.getItemAt(0);
         jComboBox3.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBox3ItemStateChanged(evt);
+            }
+        });
+        jComboBox3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox3ActionPerformed(evt);
             }
         });
 
@@ -248,20 +274,71 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Colocar Fragmentos Miniterminos"));
+
+        Miniterms_jScroll.setBorder(null);
+
+        jTableMiniTerms.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Numero", "Minitermino"
+            }
+        ));
+        Miniterms_jScroll.setViewportView(jTableMiniTerms);
+        if (jTableMiniTerms.getColumnModel().getColumnCount() > 0) {
+            jTableMiniTerms.getColumnModel().getColumn(0).setPreferredWidth(20);
+        }
+
+        jLabel7.setText("Sitio:");
+
+        jComboBox6.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox6ItemStateChanged(evt);
+            }
+        });
+
+        jButton4.setText("Examinar");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(Miniterms_jScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(85, 85, 85)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(Miniterms_jScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -375,15 +452,33 @@ public class GUI extends javax.swing.JFrame {
 
         jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder("Seleccionar Atributos"));
 
+        jComboBox5.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox5ItemStateChanged(evt);
+            }
+        });
+
+        jLabel6.setText("Atributo");
+
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(90, 90, 90)
+                .addComponent(jComboBox5, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(82, 82, 82))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         jButton3.setText("Aceptar");
@@ -501,12 +596,16 @@ public class GUI extends javax.swing.JFrame {
        }
        else{
            PredicadoSimple ps=new PredicadoSimple(Atributo,Operador,jTextField1.getText(),RelacionHorizontal);
-           System.out.println(ps);
-           this.AddPredicado(ps);
+           try {
+               this.AddPredicado(ps);
+           } catch (SQLException ex) {
+               Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+           }
            
        }
     }//GEN-LAST:event_jButton1ActionPerformed
-
+                                       
+    
     private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
         // TODO add your handling code here:
         if( evt.getStateChange() == ItemEvent.SELECTED ){
@@ -537,6 +636,67 @@ public class GUI extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jComboBox4ItemStateChanged
+
+    private void jComboBox5ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox5ItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox5ItemStateChanged
+
+    private void jComboBox6ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox6ItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox6ItemStateChanged
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    
+    private void Genera_MinitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Genera_MinitActionPerformed
+        //-------------------------------Esto lo hizo Emm --------------------------------------------------------
+        int i, j, index1, index2;
+        String pr1, pr2;
+        String pre1, pre2;
+        int aux = predicados.size();
+        PredicadoSimple p1, p2;
+        
+        //Creando los predicados negados y añadiendo a lista:
+        for(i=0; i<aux; i++) {
+             PredicadoSimple nps=new PredicadoSimple("! "+predicados.get(i).getAtributo(),predicados.get(i).getOperador(),predicados.get(i).getValor(),predicados.get(i).getRelacion());
+             predicados.add(nps);
+        }
+        
+        //Haciendo la "combinacion"        
+        for(i=0 ; i < predicados.size(); i++) {
+            p1 = predicados.get(i);
+            pr1= p1.toString();
+            index1 = pr1.indexOf("(");
+            pre1 = pr1.substring(0, index1);
+            
+            for(j=i+1; j<predicados.size(); j++) {
+               p2 = predicados.get(j);
+               pr2= p2.toString();
+               index2 = pr2.indexOf("(");
+               pre2 = pr2.substring(0, index2);
+               
+               if(!pre1.equals(pre2)&&(p1.getRelacion()==p2.getRelacion())) {
+                   Pre_Minitermino mt=new Pre_Minitermino(pre1,pre2);
+                   try {
+                        // System.out.println(mt);
+                       this.AddMinitermino(mt, p1);
+                        
+                   } catch (SQLException ex) {
+                       Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                   }
+               }
+            }
+           
+        }
+    }//GEN-LAST:event_Genera_MinitActionPerformed
+
+    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox3ActionPerformed
+    
+    
     private void CreateTable(String item,JScrollPane panel) throws SQLException{
         DefaultTableModel model = new DefaultTableModel();
         JTable table;
@@ -562,15 +722,71 @@ public class GUI extends javax.swing.JFrame {
         }
         Atributo=jComboBox2.getItemAt(0);
     }
-    private void AddPredicado(PredicadoSimple ps){
-        predicados.add(ps);
-        DefaultTableModel model=(DefaultTableModel) jTable1.getModel();
-        String id=""+model.getRowCount();
-        Object []aux={id,ps.toString()};
-        model.addRow(aux);
-        jTable1.setModel(model);
-        jScrollPane2.updateUI();
+    private void AddPredicado(PredicadoSimple ps) throws SQLException{   
+        //Nuevo, Emm hizo esto: -----------------------------------------------------------------------------
+        String p = ps.toString();
+        int indice_Antes_Relacion = p.indexOf("(");
+        prediSim = p.substring(0, indice_Antes_Relacion);
+        
+        String query_predicado = "Select * from "+ ps.getRelacion()+" where "+ prediSim+ ";";
+        ResultSet aux_pred=mysql.QueryRead(query_predicado);
+        
+//        aux_pred.next();
+//        String imprimir = aux_pred.getString(1);
+//            System.out.println(ps.getRelacion());
+//            System.out.println(prediSim);
+//            System.out.println(query_predicado);
+//        System.out.println(imprimir);        
+        
+        if(!aux_pred.next()){           //Aqui probamos si el predicado genera resultados (no es nulo)
+            JOptionPane.showMessageDialog(new Frame(),"El predicado no es valido, es un conjunto vacio");
+        }
+
+        else {
+            predicados.add(ps);
+            DefaultTableModel model=(DefaultTableModel) jTable1.getModel();
+            String id=""+model.getRowCount();
+            Object []aux={id,ps.toString()};
+            model.addRow(aux);
+            jTable1.setModel(model);
+            jScrollPane2.updateUI();
+            System.out.println("Predicado agregado con exito");
+        }
+        
+        
     }
+    
+    private void AddMinitermino(Pre_Minitermino mt, PredicadoSimple ps) throws SQLException{
+         //Nuevo, Emm hizo esto: --------------------------------------------------------------------------------------
+        
+        String mter = mt.toString();
+        
+        String query_miter = "Select * from "+ ps.getRelacion()+" where "+ mt.getPredicado1()+ "and "+ mt.getPredicado2()+ ";" ;
+        ResultSet aux_mt=mysql.QueryRead(query_miter);
+        
+//        aux_pred.next();
+//        String imprimir = aux_pred.getString(1);
+//            System.out.println(ps.getRelacion());
+//            System.out.println(query_predicado);
+//        System.out.println(imprimir);        
+        
+        if(!aux_mt.next()){           //Aqui probamos si el miniter. genera resultados (no es nulo)
+            System.out.println("El minitermino "+ mter +  " no es valido");
+        }
+
+        else {
+            miniterminos.add(mt);
+            DefaultTableModel model=(DefaultTableModel) jTableMiniTerms.getModel();
+            String id=""+model.getRowCount();
+            Object []aux={id,mt.toString()};
+            model.addRow(aux);
+            jTableMiniTerms.setModel(model);
+            Miniterms_jScroll.updateUI();
+            System.out.println("Minitermino "+ mter +  " agregado con exito");
+        }
+        
+    }
+    
     private void CreateCheckBox(String item) throws SQLException{
         String query="Select  count(*) as Atr from information_schema.columns where table_name='"+item+"'";
         ResultSet aux=mysql.QueryRead(query);
@@ -628,18 +844,24 @@ public class GUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Genera_Minit;
+    private javax.swing.JScrollPane Miniterms_jScroll;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JComboBox<String> jComboBox4;
+    private javax.swing.JComboBox<String> jComboBox5;
+    private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -658,6 +880,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTableMiniTerms;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
