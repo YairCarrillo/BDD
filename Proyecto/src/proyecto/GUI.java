@@ -660,7 +660,7 @@ public class GUI extends javax.swing.JFrame {
         
         //Creando los predicados negados y añadiendo a lista:
         for(i=0; i<aux; i++) {
-             PredicadoSimple nps=new PredicadoSimple("! "+predicados.get(i).getAtributo(),predicados.get(i).getOperador(),predicados.get(i).getValor(),predicados.get(i).getRelacion());
+             PredicadoSimple nps=new PredicadoSimple("¬ "+predicados.get(i).getAtributo(),predicados.get(i).getOperador(),predicados.get(i).getValor(),predicados.get(i).getRelacion());
              predicados.add(nps);
         }
         
@@ -761,7 +761,19 @@ public class GUI extends javax.swing.JFrame {
         
         String mter = mt.toString();
         
-        String query_miter = "Select * from "+ ps.getRelacion()+" where "+ mt.getPredicado1()+ "and "+ mt.getPredicado2()+ ";" ;
+        //Colocamos los predicados entre parentesis, incluyendo al signo de negacion si es el caso:
+        String pre1_str = mt.getPredicado1().toString().replaceFirst("¬ ", "!(");
+        pre1_str = pre1_str.concat(")");
+        String pre2_str = mt.getPredicado2().toString().replaceFirst("¬ ", "!(");
+        pre2_str = pre2_str.concat(")");
+       
+        if(!pre1_str.contains("("))
+               pre1_str = "("+ pre1_str;
+        if(!pre2_str.contains("("))
+               pre2_str = "("+ pre2_str;
+
+        
+        String query_miter = "Select * from "+ ps.getRelacion()+" where "+ pre1_str + "and "+ pre2_str + ";" ;
         ResultSet aux_mt=mysql.QueryRead(query_miter);
         
 //        aux_pred.next();
