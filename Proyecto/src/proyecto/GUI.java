@@ -637,7 +637,10 @@ public class GUI extends javax.swing.JFrame {
                 
                 this.CreateTable(item.toString(),jScrollPane1);
                 this.AddItems(item.toString());
-                this.ClearTable();
+                this.ClearTable(jTable1,jScrollPane1);
+                this.ClearTable(jTableMiniTerms,Miniterms_jScroll);
+                predicados.clear();
+                miniterminos.clear();
             } catch (SQLException ex) {
                 Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -706,14 +709,14 @@ public class GUI extends javax.swing.JFrame {
     private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox6ActionPerformed
-    private void ClearTable(){
-        DefaultTableModel model=(DefaultTableModel) jTable1.getModel();
+    private void ClearTable(JTable table,JScrollPane jp){
+        DefaultTableModel model=(DefaultTableModel) table.getModel();
         if(model.getRowCount()!=0){
             while(model.getRowCount()>0){
                 model.removeRow(0);
             }
-            jTable1.setModel(model);
-            jScrollPane2.updateUI();
+            table.setModel(model);
+            jp.updateUI();
         }
     }
     
@@ -746,10 +749,10 @@ public class GUI extends javax.swing.JFrame {
         //Nuevo, Emm hizo esto: -----------------------------------------------------------------------------
         String p = ps.toString();
         String query_predicado;
-        int indice_Antes_Relacion = p.indexOf("(");
-        prediSim = p.substring(0, indice_Antes_Relacion);
+        //int indice_Antes_Relacion = p.indexOf("(");
+        //prediSim = p.substring(0, indice_Antes_Relacion);
         String tipo_dato="Select  data_type from information_schema.columns WHERE TABLE_NAME='"+ps.getRelacion()+"' and column_name='"+ps.getAtributo()+"'";
-        System.out.println(tipo_dato);
+        //System.out.println(tipo_dato);
         ResultSet aux1=mysql.QueryRead(tipo_dato);
         aux1.next();
         if(aux1.getString("data_type").equals("varchar")){
