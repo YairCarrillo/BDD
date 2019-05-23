@@ -10,32 +10,30 @@ package proyecto;
  * @author Emm
  */
 class Pre_Minitermino {
-    private String Parte1;
-    private String Parte2;
-    private String Relacion;
-    public Pre_Minitermino(String Parte1,String Parte2){
-        this.Parte1= Parte1;
-        this.Parte2= Parte2;
-        this.Relacion=Relacion;
+    private PredicadoSimple p1;
+    private PredicadoSimple p2;
+    public Pre_Minitermino(PredicadoSimple p1,PredicadoSimple p2){
+        this.p1= p1;
+        this.p2= p2;
     }
     public String toString(){
-        return "("+Parte1+")"+" ^ "+ "("+Parte2+")";
+        return "("+p1.toString()+")"+" ^ "+ "("+p2.toString()+")";
     }
 
-    public String getPredicado1() {
-        return Parte1;
+    public PredicadoSimple getPredicado1() {
+        return p1;
     }
 
-    public String getPredicado2() {
-        return Parte2;
+    public PredicadoSimple getPredicado2() {
+        return p2;
     }
 
-    public void setPredicado1(String Predicado1) {
-        this.Parte1 = Parte1;
+    public void setPredicado1(PredicadoSimple p1) {
+        this.p1 = p1;
     }
 
-    public void setPredicado2(String Predicado2) {
-        this.Parte2 = Parte2;
+    public void setPredicado2(PredicadoSimple p2) {
+        this.p2 = p2;
     }
 
 }

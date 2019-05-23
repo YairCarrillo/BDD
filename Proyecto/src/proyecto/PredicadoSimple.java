@@ -56,5 +56,28 @@ public class PredicadoSimple {
     public void setRelacion(String Relacion) {
         this.Relacion = Relacion;
     }
+    public PredicadoSimple NotPredicado(){
+        String Op ="";
+        if(this.Operador.equals("=")){
+            Op="<>";
+        }
+        else if(this.Operador.equals("<>")){
+            Op="=";
+        }
+        else if(this.Operador.equals(">")){
+            Op="<=";
+        }
+        else if(this.Operador.equals("<")){
+            Op=">=";
+        }
+        else if(this.Operador.equals(">=")){
+            Op="<";
+        }
+        else if(this.Operador.equals("<=")){
+            Op=">";
+        }
+        return new PredicadoSimple(this.Atributo,Op,this.valor,this.Relacion);
+        
+    }
     
 }

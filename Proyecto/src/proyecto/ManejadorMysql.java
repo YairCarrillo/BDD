@@ -20,10 +20,13 @@ import java.util.logging.Logger;
 public class ManejadorMysql {
     Connection connection;
     String driver="com.mysql.jdbc.Driver";
-    String user="root";
-    String pw="peter2017";
-    String url="jdbc:mysql://127.0.0.1:3306/galardon_galardonados";
-    public ManejadorMysql(){   
+    String user;
+    String pw;
+    String url;
+    public ManejadorMysql(String url,String pw,String user){
+       this.user=user;
+       this.pw=pw;
+       this.url=url;
        this.Connection();
     }
     public void Connection(){

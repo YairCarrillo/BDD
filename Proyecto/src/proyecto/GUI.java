@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -39,7 +40,7 @@ public class GUI extends javax.swing.JFrame {
      * Creates new form GUI
      */
     public GUI() {
-        mysql=new ManejadorMysql();
+        mysql=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/galardon_galardonados","root","root");
         predicados=new ArrayList();
         miniterminos = new ArrayList();         //Se agrego un array para miniterminos!----------------------------
         checkBox=new ArrayList();
@@ -164,13 +165,31 @@ public class GUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Predicado Simple"
+                "ID", "Predicado Simple", ""
             }
-        ));
-        jTable1.setEnabled(false);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.setEnabled(true);
+        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jScrollPane2.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(20);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(290);
+            jTable1.getColumnModel().getColumn(2).setPreferredWidth(50);
         }
 
         Genera_Minit.setText("Generar miniterminos");
@@ -185,10 +204,10 @@ public class GUI extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 241, Short.MAX_VALUE)
                         .addComponent(Genera_Minit)))
                 .addContainerGap())
         );
@@ -196,8 +215,8 @@ public class GUI extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Genera_Minit)
                 .addContainerGap())
         );
@@ -301,6 +320,11 @@ public class GUI extends javax.swing.JFrame {
                 jComboBox6ItemStateChanged(evt);
             }
         });
+        jComboBox6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox6ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Examinar");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -324,8 +348,7 @@ public class GUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)
-                        .addComponent(jButton4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jButton4)))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -542,7 +565,7 @@ public class GUI extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+                .addContainerGap(28, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -550,7 +573,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         jTabbedPane3.addTab("Fagmentación Vertical", jPanel2);
@@ -604,16 +627,17 @@ public class GUI extends javax.swing.JFrame {
            
        }
     }//GEN-LAST:event_jButton1ActionPerformed
-                                       
-    
+                                      
     private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
         // TODO add your handling code here:
         if( evt.getStateChange() == ItemEvent.SELECTED ){
             Object item= evt.getItem();
             RelacionHorizontal=item.toString();
             try {
+                
                 this.CreateTable(item.toString(),jScrollPane1);
                 this.AddItems(item.toString());
+                this.ClearTable();
             } catch (SQLException ex) {
                 Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -652,50 +676,46 @@ public class GUI extends javax.swing.JFrame {
     
     private void Genera_MinitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Genera_MinitActionPerformed
         //-------------------------------Esto lo hizo Emm --------------------------------------------------------
-        int i, j, index1, index2;
-        String pr1, pr2;
-        String pre1, pre2;
-        int aux = predicados.size();
-        PredicadoSimple p1, p2;
+        ArrayList<PredicadoSimple> predicadoAux=this.getPredicados();
         
-        //Creando los predicados negados y añadiendo a lista:
-        for(i=0; i<aux; i++) {
-             PredicadoSimple nps=new PredicadoSimple("¬ "+predicados.get(i).getAtributo(),predicados.get(i).getOperador(),predicados.get(i).getValor(),predicados.get(i).getRelacion());
-             predicados.add(nps);
+        if(predicadoAux.size()!=2){
+            JOptionPane.showMessageDialog(new Frame(),"Selecciones solo dos predicados simple para generar Miniterminos");
         }
-        
-        //Haciendo la "combinacion"        
-        for(i=0 ; i < predicados.size(); i++) {
-            p1 = predicados.get(i);
-            pr1= p1.toString();
-            index1 = pr1.indexOf("(");
-            pre1 = pr1.substring(0, index1);
-            
-            for(j=i+1; j<predicados.size(); j++) {
-               p2 = predicados.get(j);
-               pr2= p2.toString();
-               index2 = pr2.indexOf("(");
-               pre2 = pr2.substring(0, index2);
-               
-               if(!pre1.equals(pre2)&&(p1.getRelacion()==p2.getRelacion())) {
-                   Pre_Minitermino mt=new Pre_Minitermino(pre1,pre2);
-                   try {
-                        // System.out.println(mt);
-                       this.AddMinitermino(mt, p1);
-                        
-                   } catch (SQLException ex) {
-                       Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                   }
-               }
+        else{
+            PredicadoSimple p1=predicadoAux.get(0),p2=predicadoAux.get(1);
+            for(int i=0;i<predicadoAux.size();i++){
+                for(int j=0;j<predicadoAux.size();j++){
+                    try {
+                        this.AddMinitermino(new Pre_Minitermino(p1,p2));
+                    } catch (SQLException ex) {
+                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    p2=p2.NotPredicado();
+                }
+                p1=p1.NotPredicado();
+                p2=p2.NotPredicado();
             }
-           
         }
+       
     }//GEN-LAST:event_Genera_MinitActionPerformed
 
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox3ActionPerformed
-    
+
+    private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox6ActionPerformed
+    private void ClearTable(){
+        DefaultTableModel model=(DefaultTableModel) jTable1.getModel();
+        if(model.getRowCount()!=0){
+            while(model.getRowCount()>0){
+                model.removeRow(0);
+            }
+            jTable1.setModel(model);
+            jScrollPane2.updateUI();
+        }
+    }
     
     private void CreateTable(String item,JScrollPane panel) throws SQLException{
         DefaultTableModel model = new DefaultTableModel();
@@ -725,10 +745,19 @@ public class GUI extends javax.swing.JFrame {
     private void AddPredicado(PredicadoSimple ps) throws SQLException{   
         //Nuevo, Emm hizo esto: -----------------------------------------------------------------------------
         String p = ps.toString();
+        String query_predicado;
         int indice_Antes_Relacion = p.indexOf("(");
         prediSim = p.substring(0, indice_Antes_Relacion);
-        
-        String query_predicado = "Select * from "+ ps.getRelacion()+" where "+ prediSim+ ";";
+        String tipo_dato="Select  data_type from information_schema.columns WHERE TABLE_NAME='"+ps.getRelacion()+"' and column_name='"+ps.getAtributo()+"'";
+        System.out.println(tipo_dato);
+        ResultSet aux1=mysql.QueryRead(tipo_dato);
+        aux1.next();
+        if(aux1.getString("data_type").equals("varchar")){
+            query_predicado = "Select * from "+ ps.getRelacion()+" where "+ps.getAtributo()+""+ps.getOperador()+"'"+ps.getValor()+ "'";
+        }
+        else{
+            query_predicado = "Select * from "+ ps.getRelacion()+" where "+ps.getAtributo()+""+ps.getOperador()+""+ps.getValor()+ "";
+        }
         ResultSet aux_pred=mysql.QueryRead(query_predicado);
         
 //        aux_pred.next();
@@ -737,7 +766,6 @@ public class GUI extends javax.swing.JFrame {
 //            System.out.println(prediSim);
 //            System.out.println(query_predicado);
 //        System.out.println(imprimir);        
-        
         if(!aux_pred.next()){           //Aqui probamos si el predicado genera resultados (no es nulo)
             JOptionPane.showMessageDialog(new Frame(),"El predicado no es valido, es un conjunto vacio");
         }
@@ -745,35 +773,43 @@ public class GUI extends javax.swing.JFrame {
         else {
             predicados.add(ps);
             DefaultTableModel model=(DefaultTableModel) jTable1.getModel();
-            String id=""+model.getRowCount();
-            Object []aux={id,ps.toString()};
+            int id=model.getRowCount();
+            Object []aux={id,ps,false};
             model.addRow(aux);
             jTable1.setModel(model);
             jScrollPane2.updateUI();
             System.out.println("Predicado agregado con exito");
         }
         
-        
     }
     
-    private void AddMinitermino(Pre_Minitermino mt, PredicadoSimple ps) throws SQLException{
+    private void AddMinitermino(Pre_Minitermino mt) throws SQLException{
          //Nuevo, Emm hizo esto: --------------------------------------------------------------------------------------
-        
-        String mter = mt.toString();
-        
-        //Colocamos los predicados entre parentesis, incluyendo al signo de negacion si es el caso:
-        String pre1_str = mt.getPredicado1().toString().replaceFirst("¬ ", "!(");
-        pre1_str = pre1_str.concat(")");
-        String pre2_str = mt.getPredicado2().toString().replaceFirst("¬ ", "!(");
-        pre2_str = pre2_str.concat(")");
-       
-        if(!pre1_str.contains("("))
-               pre1_str = "("+ pre1_str;
-        if(!pre2_str.contains("("))
-               pre2_str = "("+ pre2_str;
-
-        
-        String query_miter = "Select * from "+ ps.getRelacion()+" where "+ pre1_str + "and "+ pre2_str + ";" ;
+        PredicadoSimple p1,p2;
+        p1=mt.getPredicado1();
+        p2=mt.getPredicado2();
+        String tipo_dato_p1="Select  data_type from information_schema.columns WHERE TABLE_NAME='"+p1.getRelacion()+"' and column_name='"+p1.getAtributo()+"'";
+        String tipo_dato_p2="Select  data_type from information_schema.columns WHERE TABLE_NAME='"+p2.getRelacion()+"' and column_name='"+p2.getAtributo()+"'"; 
+        ResultSet dato_p1=mysql.QueryRead(tipo_dato_p1);
+        ResultSet dato_p2=mysql.QueryRead(tipo_dato_p2);
+        dato_p1.next();
+        dato_p2.next();
+        String pre1_string="";
+        String pre2_string="";
+        if(dato_p1.getString("data_type").equals("varchar")){
+            pre1_string="'"+p1.getValor()+"'";
+        }
+        else{
+            pre1_string=p1.getValor();
+        }
+        if(dato_p2.getString("data_type").equals("varchar")){
+            pre2_string="'"+p2.getValor()+"'";
+        }
+        else{
+            pre2_string=p2.getValor();
+        }
+        String query_miter = "Select * from "+ p1.getRelacion()+" where "+p1.getAtributo()+""+p1.getOperador()+""+pre1_string+" and "+p2.getAtributo()+""+p2.getOperador()+""+pre2_string+"";
+        System.out.println(query_miter);
         ResultSet aux_mt=mysql.QueryRead(query_miter);
         
 //        aux_pred.next();
@@ -783,7 +819,7 @@ public class GUI extends javax.swing.JFrame {
 //        System.out.println(imprimir);        
         
         if(!aux_mt.next()){           //Aqui probamos si el miniter. genera resultados (no es nulo)
-            System.out.println("El minitermino "+ mter +  " no es valido");
+            System.out.println("El minitermino "+ mt +  " no es valido");
         }
 
         else {
@@ -794,11 +830,21 @@ public class GUI extends javax.swing.JFrame {
             model.addRow(aux);
             jTableMiniTerms.setModel(model);
             Miniterms_jScroll.updateUI();
-            System.out.println("Minitermino "+ mter +  " agregado con exito");
+            System.out.println("Minitermino "+ mt +  " agregado con exito");
         }
         
     }
-    
+    private ArrayList<PredicadoSimple> getPredicados(){
+        ArrayList<PredicadoSimple> aux =new ArrayList();
+        DefaultTableModel model=(DefaultTableModel)jTable1.getModel();
+        int row=model.getRowCount();
+        for(int i=0;i<row;i++){
+            if((boolean)model.getValueAt(i,2)){
+                aux.add(predicados.get(i));
+            }
+        }
+        return aux;
+    }
     private void CreateCheckBox(String item) throws SQLException{
         String query="Select  count(*) as Atr from information_schema.columns where table_name='"+item+"'";
         ResultSet aux=mysql.QueryRead(query);
