@@ -60,9 +60,6 @@ public class Sender {
         ArrayList<String> columns = new ArrayList<>();
         for (int i = 1; i <= meta.getColumnCount(); i++)
             columns.add(meta.getColumnName(i));
-        
-            
-        
         PreparedStatement s1 = to.prepareStatement(
                 "INSERT IGNORE INTO " + table + " ("
               + columns.stream().collect(Collectors.joining(", "))
@@ -93,8 +90,8 @@ public class Sender {
     */
     public static void main(String args[]){
         try {
-            ManejadorMysql local=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/galardon_galardonados","root","root");
-            ManejadorMysql remote=new ManejadorMysql("jdbc:mysql://192.168.1.70:3306/galardon_fragmento","","yirz");
+            ManejadorMysql local=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/galardon_galardonados","root","root",1);
+            ManejadorMysql remote=new ManejadorMysql("jdbc:mysql://192.168.1.70:3306/galardon_fragmento","","yirz",2);
             Sender sender=new Sender();
             sender.SendQueryVertical("galardon",local.QueryRead("Select id from galardon"),local.getConnection(),remote.getConnection());
         } catch (SQLException ex) {

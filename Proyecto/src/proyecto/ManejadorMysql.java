@@ -23,11 +23,13 @@ public class ManejadorMysql {
     String user;
     String pw;
     String url;
-    public ManejadorMysql(String url,String pw,String user){
+    int identificador;
+    public ManejadorMysql(String url,String pw,String user,int identificador){
        this.user=user;
        this.pw=pw;
        this.url=url;
        this.Connection();
+       this.identificador=identificador;
     }
     public void Connection(){
          connection=null;
@@ -53,5 +55,8 @@ public class ManejadorMysql {
         Statement s= connection.createStatement();
         ResultSet rs=s.executeQuery(query);
         return rs;
+    }
+    public String toString(){
+        return "Sitio"+identificador;
     }
 }

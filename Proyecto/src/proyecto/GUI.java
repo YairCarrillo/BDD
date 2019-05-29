@@ -26,7 +26,7 @@ import javax.swing.table.TableModel;
  * @author Yirz
  */
 public class GUI extends javax.swing.JFrame {
-    private ManejadorMysql mysql;
+    private ManejadorMysql mysql,remote1,remote2,remote3;
     private ResultSet rs;
     private String Atributo;
     private String RelacionHorizontal;
@@ -40,7 +40,10 @@ public class GUI extends javax.swing.JFrame {
      * Creates new form GUI
      */
     public GUI() {
-        mysql=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/galardon_galardonados","root","root");
+        mysql=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/galardon_galardonados","root","root",0);
+        remote1=new ManejadorMysql("jdbc:mysql://192.168.1.70:3306/galardon_fragmento","","yirz",1);
+        remote2=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/galardon_galardonados","root","root",2);
+        remote3=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/galardon_galardonados","root","root",3);
         predicados=new ArrayList();
         miniterminos = new ArrayList();         //Se agrego un array para miniterminos!----------------------------
         checkBox=new ArrayList();
@@ -78,7 +81,7 @@ public class GUI extends javax.swing.JFrame {
         Miniterms_jScroll = new javax.swing.JScrollPane();
         jTableMiniTerms = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
-        jComboBox6 = new javax.swing.JComboBox<>();
+        Sitio = new javax.swing.JComboBox<>();
         jButton4 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
@@ -184,7 +187,7 @@ public class GUI extends javax.swing.JFrame {
             }
         });
         jTable1.setEnabled(true);
-        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane2.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -207,7 +210,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(0, 241, Short.MAX_VALUE)
+                        .addGap(0, 384, Short.MAX_VALUE)
                         .addComponent(Genera_Minit)))
                 .addContainerGap())
         );
@@ -293,7 +296,7 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(131, Short.MAX_VALUE))
         );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Colocar Fragmentos Miniterminos"));
@@ -305,9 +308,26 @@ public class GUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Numero", "Minitermino"
+                "Numero", "Minitermino", ""
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableMiniTerms.setEnabled(true);
+        jTableMiniTerms.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         Miniterms_jScroll.setViewportView(jTableMiniTerms);
         if (jTableMiniTerms.getColumnModel().getColumnCount() > 0) {
             jTableMiniTerms.getColumnModel().getColumn(0).setPreferredWidth(20);
@@ -315,21 +335,24 @@ public class GUI extends javax.swing.JFrame {
 
         jLabel7.setText("Sitio:");
 
-        jComboBox6.addItemListener(new java.awt.event.ItemListener() {
+        Sitio.addItem(remote1);
+        Sitio.addItem(remote2);
+        Sitio.addItem(remote3);
+        Sitio.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBox6ItemStateChanged(evt);
+                SitioItemStateChanged(evt);
             }
         });
-        jComboBox6.addActionListener(new java.awt.event.ActionListener() {
+        Sitio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox6ActionPerformed(evt);
+                SitioActionPerformed(evt);
             }
         });
 
         jButton4.setText("Examinar");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                EnviaFragmento(evt);
             }
         });
 
@@ -341,12 +364,12 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(Miniterms_jScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE))
+                        .addComponent(Miniterms_jScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 532, Short.MAX_VALUE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(85, 85, 85)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Sitio, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)
                         .addComponent(jButton4)))
                 .addContainerGap())
@@ -359,7 +382,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Sitio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton4))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -462,7 +485,7 @@ public class GUI extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -565,7 +588,7 @@ public class GUI extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(28, Short.MAX_VALUE)
+                .addContainerGap(59, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -573,7 +596,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
 
         jTabbedPane3.addTab("Fagmentación Vertical", jPanel2);
@@ -668,13 +691,39 @@ public class GUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox5ItemStateChanged
 
-    private void jComboBox6ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox6ItemStateChanged
+    private void SitioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_SitioItemStateChanged
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox6ItemStateChanged
+    }//GEN-LAST:event_SitioItemStateChanged
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void EnviaFragmento(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviaFragmento
+        ArrayList<Pre_Minitermino> miniterminoAux=this.getMiniterminos();
+        if(miniterminoAux.size()==0){
+            JOptionPane.showMessageDialog(new Frame(),"Selecciones por lo menos un minitermino");
+        }
+        else{
+            Sender sender=new Sender();
+            ManejadorMysql aux=(ManejadorMysql)Sitio.getSelectedItem();
+            for(int i=0;i<miniterminoAux.size();i++){
+                try {
+                    sender.SendQueryHorizontal(miniterminoAux.get(i).getPredicado1().getRelacion(),
+                            mysql.QueryRead(this.QueryMinitermino(miniterminoAux.get(i))),
+                            mysql.getConnection(),aux.getConnection());
+                } catch (SQLException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                miniterminos.remove(miniterminoAux.get(i));
+            }
+            this.ClearTable(this.jTableMiniTerms,this.Miniterms_jScroll);
+            DefaultTableModel model=(DefaultTableModel) jTableMiniTerms.getModel();
+            for(int i=0;i<miniterminos.size();i++){
+                String id=""+model.getRowCount();
+                Object []auxObj={id,miniterminos.get(i).toString(),false};
+                model.addRow(auxObj);
+            }
+            jTableMiniTerms.setModel(model);
+            Miniterms_jScroll.updateUI();
+        }
+    }//GEN-LAST:event_EnviaFragmento
 
     
     private void Genera_MinitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Genera_MinitActionPerformed
@@ -706,9 +755,9 @@ public class GUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox3ActionPerformed
 
-    private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
+    private void SitioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SitioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox6ActionPerformed
+    }//GEN-LAST:event_SitioActionPerformed
     private void ClearTable(JTable table,JScrollPane jp){
         DefaultTableModel model=(DefaultTableModel) table.getModel();
         if(model.getRowCount()!=0){
@@ -785,9 +834,7 @@ public class GUI extends javax.swing.JFrame {
         }
         
     }
-    
-    private void AddMinitermino(Pre_Minitermino mt) throws SQLException{
-         //Nuevo, Emm hizo esto: --------------------------------------------------------------------------------------
+    private String QueryMinitermino(Pre_Minitermino mt) throws SQLException{
         PredicadoSimple p1,p2;
         p1=mt.getPredicado1();
         p2=mt.getPredicado2();
@@ -813,6 +860,12 @@ public class GUI extends javax.swing.JFrame {
         }
         String query_miter = "Select * from "+ p1.getRelacion()+" where "+p1.getAtributo()+""+p1.getOperador()+""+pre1_string+" and "+p2.getAtributo()+""+p2.getOperador()+""+pre2_string+"";
         System.out.println(query_miter);
+        return query_miter;                
+    }
+    private void AddMinitermino(Pre_Minitermino mt) throws SQLException{
+         //Nuevo, Emm hizo esto: --------------------------------------------------------------------------------------
+        String query_miter=this.QueryMinitermino(mt);
+        System.out.println(query_miter);
         ResultSet aux_mt=mysql.QueryRead(query_miter);
         
 //        aux_pred.next();
@@ -829,7 +882,7 @@ public class GUI extends javax.swing.JFrame {
             miniterminos.add(mt);
             DefaultTableModel model=(DefaultTableModel) jTableMiniTerms.getModel();
             String id=""+model.getRowCount();
-            Object []aux={id,mt.toString()};
+            Object []aux={id,mt.toString(),false};
             model.addRow(aux);
             jTableMiniTerms.setModel(model);
             Miniterms_jScroll.updateUI();
@@ -844,6 +897,17 @@ public class GUI extends javax.swing.JFrame {
         for(int i=0;i<row;i++){
             if((boolean)model.getValueAt(i,2)){
                 aux.add(predicados.get(i));
+            }
+        }
+        return aux;
+    }
+    private ArrayList<Pre_Minitermino> getMiniterminos(){
+        ArrayList<Pre_Minitermino> aux =new ArrayList();
+        DefaultTableModel model=(DefaultTableModel)jTableMiniTerms.getModel();
+        int row=model.getRowCount();
+        for(int i=0;i<row;i++){
+            if((boolean)model.getValueAt(i,2)){
+                aux.add(miniterminos.get(i));
             }
         }
         return aux;
@@ -907,6 +971,7 @@ public class GUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Genera_Minit;
     private javax.swing.JScrollPane Miniterms_jScroll;
+    private javax.swing.JComboBox<ManejadorMysql> Sitio;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -915,7 +980,6 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JComboBox<String> jComboBox5;
-    private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
