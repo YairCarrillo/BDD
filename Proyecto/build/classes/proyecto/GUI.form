@@ -151,7 +151,7 @@
                     <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jComboBox1ItemStateChanged"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="try{&#xa;    rs=mysql.QueryRead(&quot;SHOW TABLES&quot;);&#xa;    while(rs.next()){&#xa;        jComboBox1.addItem(rs.getString(&quot;Tables_in_galardon_galardonados&quot;));&#xa;        jComboBox4.addItem(rs.getString(&quot;Tables_in_galardon_galardonados&quot;));&#xa;    }&#xa;    String s=jComboBox1.getItemAt(0);&#xa;    this.CreateTable(s,jScrollPane1);&#xa;    this.CreateTable(s,jScrollPane3);&#xa;    this.AddItems(s);&#xa;    this.CreateCheckBox(s);&#xa;    RelacionHorizontal=s;&#xa;    RelacionVertical=s;&#xa;    Atributo=jComboBox2.getItemAt(0);&#xa;}&#xa;catch(SQLException ex){&#xa;    ex.printStackTrace();&#xa;}"/>
+                    <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="try{&#xa;    rs=mysql.QueryRead(&quot;SHOW TABLES&quot;);&#xa;    while(rs.next()){&#xa;        jComboBox1.addItem(rs.getString(&quot;Tables_in_galardonado_galardonados&quot;));&#xa;        jComboBox4.addItem(rs.getString(&quot;Tables_in_galardonado_galardonados&quot;));&#xa;    }&#xa;    String s=jComboBox1.getItemAt(0);&#xa;    this.CreateTable(s,jScrollPane1);&#xa;    this.CreateTable(s,jScrollPane3);&#xa;    this.AddItems(s);&#xa;    this.CreateCheckBox(s);&#xa;    RelacionHorizontal=s;&#xa;    RelacionVertical=s;&#xa;    Atributo=jComboBox2.getItemAt(0);&#xa;}&#xa;catch(SQLException ex){&#xa;    ex.printStackTrace();&#xa;}"/>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
                 </Component>
@@ -182,7 +182,7 @@
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <EmptySpace min="0" pref="384" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="409" max="32767" attributes="0"/>
                                   <Component id="Genera_Minit" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -312,7 +312,7 @@
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="131" max="32767" attributes="0"/>
+                          <EmptySpace pref="142" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -626,7 +626,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane4" pref="546" max="32767" attributes="0"/>
+                          <Component id="jScrollPane4" pref="551" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -654,13 +654,19 @@
                     <Component class="javax.swing.JTable" name="jTable2">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="2" rowCount="0">
+                          <Table columnCount="3" rowCount="0">
                             <Column editable="false" title="ID" type="java.lang.Object"/>
                             <Column editable="false" title="Expresion" type="java.lang.Object"/>
+                            <Column editable="true" title="" type="java.lang.Boolean"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                           <TableColumnModel selectionModel="0">
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
                             <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                               <Title/>
                               <Editor/>
@@ -677,6 +683,9 @@
                           <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                         </Property>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="jTable1.setEnabled(true);"/>
+                      </AuxValues>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -784,15 +793,56 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="147" max="-2" attributes="0"/>
+                          <Component id="jLabel8" min="-2" pref="35" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="Sitio1" min="-2" pref="88" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                          <Component id="EnviarExpresion" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="Sitio1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="EnviarExpresion" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="jLabel8">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Sitio:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="Sitio1">
+                  <Events>
+                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="Sitio1ItemStateChanged"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Sitio1ActionPerformed"/>
+                  </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="Sitio1.addItem(remote1);&#xa;Sitio1.addItem(remote2);&#xa;Sitio1.addItem(remote3);"/>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;ManejadorMysql&gt;"/>
+                  </AuxValues>
+                </Component>
+                <Component class="javax.swing.JButton" name="EnviarExpresion">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Examinar"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="EnviarExpresionEnviaFragmento"/>
+                  </Events>
+                </Component>
+              </SubComponents>
             </Container>
           </SubComponents>
         </Container>

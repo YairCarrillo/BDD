@@ -35,18 +35,22 @@ public class GUI extends javax.swing.JFrame {
     ArrayList<PredicadoSimple> predicados;
     ArrayList <Pre_Minitermino> miniterminos;
     ArrayList<JCheckBox> checkBox;
+    ArrayList<String> expresiones; //---
+    ArrayList<String> expre; //---
     String prediSim;
     /**
      * Creates new form GUI
      */
     public GUI() {
-        mysql=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/galardon_galardonados","root","root",0);
-        remote1=new ManejadorMysql("jdbc:mysql://192.168.1.70:3306/galardon_fragmento","","yirz",1);
-        remote2=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/galardon_galardonados","root","root",2);
-        remote3=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/galardon_galardonados","root","root",3);
+        mysql=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/galardonado_galardonados","luisca","root",0);
+        remote1=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/s1","luisca","root",1);
+        remote2=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/s2","luisca","root",2);
+        remote3=new ManejadorMysql("jdbc:mysql://127.0.0.1:3306/s3","luisca","root",3);
         predicados=new ArrayList();
         miniterminos = new ArrayList();         //Se agrego un array para miniterminos!----------------------------
         checkBox=new ArrayList();
+        expresiones=new ArrayList();//---
+        expre= new ArrayList();//---
         initComponents();
     }
 
@@ -63,15 +67,15 @@ public class GUI extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox1 = new javax.swing.JComboBox<String>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         Genera_Minit = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        jComboBox2 = new javax.swing.JComboBox<String>();
+        jComboBox3 = new javax.swing.JComboBox<String>();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -81,22 +85,25 @@ public class GUI extends javax.swing.JFrame {
         Miniterms_jScroll = new javax.swing.JScrollPane();
         jTableMiniTerms = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
-        Sitio = new javax.swing.JComboBox<>();
+        Sitio = new javax.swing.JComboBox<ManejadorMysql>();
         jButton4 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox4 = new javax.swing.JComboBox<>();
+        jComboBox4 = new javax.swing.JComboBox<String>();
         jScrollPane3 = new javax.swing.JScrollPane();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jPanel9 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
-        jComboBox5 = new javax.swing.JComboBox<>();
+        jComboBox5 = new javax.swing.JComboBox<String>();
         jLabel6 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        Sitio1 = new javax.swing.JComboBox<ManejadorMysql>();
+        EnviarExpresion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,8 +114,8 @@ public class GUI extends javax.swing.JFrame {
         try{
             rs=mysql.QueryRead("SHOW TABLES");
             while(rs.next()){
-                jComboBox1.addItem(rs.getString("Tables_in_galardon_galardonados"));
-                jComboBox4.addItem(rs.getString("Tables_in_galardon_galardonados"));
+                jComboBox1.addItem(rs.getString("Tables_in_galardonado_galardonados"));
+                jComboBox4.addItem(rs.getString("Tables_in_galardonado_galardonados"));
             }
             String s=jComboBox1.getItemAt(0);
             this.CreateTable(s,jScrollPane1);
@@ -210,7 +217,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(0, 384, Short.MAX_VALUE)
+                        .addGap(0, 409, Short.MAX_VALUE)
                         .addComponent(Genera_Minit)))
                 .addContainerGap())
         );
@@ -232,7 +239,7 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "=", "<", ">", "<>", "<=", ">=" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "=", "<", ">", "<>", "<=", ">=" }));
         Operador=jComboBox3.getItemAt(0);
         jComboBox3.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -296,7 +303,7 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(131, Short.MAX_VALUE))
+                .addContainerGap(142, Short.MAX_VALUE))
         );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Colocar Fragmentos Miniterminos"));
@@ -466,17 +473,25 @@ public class GUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Expresion"
+                "ID", "Expresion", ""
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setEnabled(true);
         jScrollPane4.setViewportView(jTable2);
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
@@ -485,7 +500,7 @@ public class GUI extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -559,15 +574,51 @@ public class GUI extends javax.swing.JFrame {
 
         jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder("Colocación de Fragmentos"));
 
+        jLabel8.setText("Sitio:");
+
+        Sitio1.addItem(remote1);
+        Sitio1.addItem(remote2);
+        Sitio1.addItem(remote3);
+        Sitio1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                Sitio1ItemStateChanged(evt);
+            }
+        });
+        Sitio1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Sitio1ActionPerformed(evt);
+            }
+        });
+
+        EnviarExpresion.setText("Examinar");
+        EnviarExpresion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EnviarExpresionEnviaFragmento(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(147, 147, 147)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Sitio1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(EnviarExpresion)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(80, 80, 80)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(Sitio1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(EnviarExpresion))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -672,6 +723,18 @@ public class GUI extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        expresiones.clear();
+        for(int i=0; i<checkBox.size(); i++){
+            if(checkBox.get(i).isSelected()){
+                expresiones.add(checkBox.get(i).getText());
+            }
+        }
+        Expresion exp=new Expresion(expresiones,RelacionVertical);
+        try{
+            this.AddExpresion(exp);
+        } catch(SQLException ex){
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jComboBox4ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox4ItemStateChanged
@@ -681,6 +744,9 @@ public class GUI extends javax.swing.JFrame {
             try {
                 this.CreateTable(item.toString(),jScrollPane3);
                 this.CreateCheckBox(item.toString());
+                this.ClearTable(jTable2,jScrollPane4);
+                expre.clear();
+                expresiones.clear();
             } catch (SQLException ex) {
                 Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -725,7 +791,44 @@ public class GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_EnviaFragmento
 
-    
+    private void AddExpresion(Expresion exp) throws SQLException{
+        String ex = exp.toString();
+        int n;
+        //System.out.println("Expresion: "+exp.toString());
+        n = ValidarExp(exp);
+        //System.out.println("Valor n = "+ n);
+        if(n == 0){
+            JOptionPane.showMessageDialog(new Frame(),"Esta expresión ya se ingreso");
+        }
+        else{
+        expre.add(ex);
+        /*for(int i=0; i<expre.size();i++){
+            System.out.println("Expresion "+i+" : "+expre.get(i).toString());
+        }*/
+        DefaultTableModel mode2 = (DefaultTableModel) jTable2.getModel();
+        int id = mode2.getRowCount();
+        Object []aux = {id,ex,false};
+        mode2.addRow(aux);
+        jTable2.setModel(mode2);
+        jScrollPane4.updateUI();
+        System.out.println("Expresion agregada con exito"); 
+        }
+        //expresiones.clear();
+    }
+    private int ValidarExp(Expresion exp) throws SQLException{
+        //System.out.println("Tamaño: " + expre.size());
+        String ex = exp.toString();
+        if(expre.isEmpty()){
+            return 1;
+        }// Podría sobrar esta parte
+        for(int i=0; i<expre.size(); i++){
+            //System.out.println(expre.get(i));
+            if(ex.equals(expre.get(i))){
+                return 0;
+            }
+        }
+        return 1;
+    }
     private void Genera_MinitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Genera_MinitActionPerformed
         //-------------------------------Esto lo hizo Emm --------------------------------------------------------
         ArrayList<PredicadoSimple> predicadoAux=this.getPredicados();
@@ -758,6 +861,46 @@ public class GUI extends javax.swing.JFrame {
     private void SitioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SitioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_SitioActionPerformed
+
+    private void Sitio1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_Sitio1ItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Sitio1ItemStateChanged
+
+    private void Sitio1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Sitio1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Sitio1ActionPerformed
+
+    private void EnviarExpresionEnviaFragmento(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarExpresionEnviaFragmento
+        // TODO add your handling code here:
+        ArrayList <String> Expresion_aux = this.getExpresiones();
+        if(Expresion_aux.isEmpty()){
+            JOptionPane.showMessageDialog(new Frame(),"Selecciona por lo menos una expresion");
+        }
+        else{
+            Sender sender=new Sender();
+            ManejadorMysql aux=(ManejadorMysql)Sitio1.getSelectedItem();
+            for(int i=0;i<Expresion_aux.size();i++){
+                
+                try { 
+                    sender.SendQueryVertical(RelacionVertical,
+                            mysql.QueryRead(this.QueryExpresion(Expresion_aux.get(i),RelacionVertical)),
+                            mysql.getConnection(),aux.getConnection());
+                } catch (SQLException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                expre.remove(Expresion_aux.get(i));
+            }
+            this.ClearTable(this.jTable2,this.jScrollPane4);
+            DefaultTableModel model=(DefaultTableModel) jTable2.getModel();
+            for(int i=0;i<expre.size();i++){
+                String id=""+model.getRowCount();
+                Object []auxObj={id,expre.get(i).toString(),false};
+                model.addRow(auxObj);
+            }
+            jTable2.setModel(model);
+            jScrollPane4.updateUI();
+        }
+    }//GEN-LAST:event_EnviarExpresionEnviaFragmento
     private void ClearTable(JTable table,JScrollPane jp){
         DefaultTableModel model=(DefaultTableModel) table.getModel();
         if(model.getRowCount()!=0){
@@ -862,6 +1005,14 @@ public class GUI extends javax.swing.JFrame {
         System.out.println(query_miter);
         return query_miter;                
     }
+    private String QueryExpresion(String exp,String Relacion) throws SQLException{
+        String[] partes = exp.split("-");
+        System.out.println(partes[0]);
+        System.out.println(partes[1]);
+        String frag_exp="Select "+partes[0]+" from "+Relacion;
+        System.out.println(frag_exp);
+        return frag_exp;                
+    }
     private void AddMinitermino(Pre_Minitermino mt) throws SQLException{
          //Nuevo, Emm hizo esto: --------------------------------------------------------------------------------------
         String query_miter=this.QueryMinitermino(mt);
@@ -908,6 +1059,17 @@ public class GUI extends javax.swing.JFrame {
         for(int i=0;i<row;i++){
             if((boolean)model.getValueAt(i,2)){
                 aux.add(miniterminos.get(i));
+            }
+        }
+        return aux;
+    }
+    private ArrayList<String> getExpresiones(){
+        ArrayList<String> aux =new ArrayList();
+        DefaultTableModel model=(DefaultTableModel)jTable2.getModel();
+        int row=model.getRowCount();
+        for(int i=0;i<row;i++){
+            if((boolean)model.getValueAt(i,2)){
+                aux.add(expre.get(i));
             }
         }
         return aux;
@@ -969,9 +1131,11 @@ public class GUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton EnviarExpresion;
     private javax.swing.JButton Genera_Minit;
     private javax.swing.JScrollPane Miniterms_jScroll;
     private javax.swing.JComboBox<ManejadorMysql> Sitio;
+    private javax.swing.JComboBox<ManejadorMysql> Sitio1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -987,6 +1151,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
